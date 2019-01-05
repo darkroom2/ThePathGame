@@ -1,92 +1,38 @@
 package Model;
 
 import Controllers.GameCfg;
-import Controllers.Handler;
 
 import java.awt.*;
 import java.util.stream.Stream;
 
 public class Map extends GameObject {
 
+    //int obstacleCount;
+    //int extraLivesCount;
+    //int circleCount;
+    int[] leftCoords;
+    int[] rightCoords;
     Polygon leftPoly;
     Polygon rightPoly;
-    //private int[] bonusCoords;
 
-    public Map(int x, int y, Handler handler, GameCfg.DIFFICULTY diff, String level) {
-        super(ID.Map, x, y);
-
+    public Map(ID id, int x, int y, GameCfg.DIFFICULTY diff) {
+        super(id, x, y);
         leftPoly = new Polygon();
         rightPoly = new Polygon();
-
         velY = loadDifficulty(diff);
 
         // fancy-complex way of converting string to int array. first we get property normally, and split it, and use it in Stream.of and then use mapToInt using Integer::parseInt and lastly we make array from the output
-        int[] leftCoords = Stream.of(GameCfg.getProps().getProperty(level + ".leftPoly").split(",")).mapToInt(Integer::parseInt).toArray();
-        int[] rightCoords = Stream.of(GameCfg.getProps().getProperty(level + ".rightPoly").split(",")).mapToInt(Integer::parseInt).toArray();
-        int[] obstacleCoords = Stream.of(GameCfg.getProps().getProperty(level + ".obstacleCoords").split(",")).mapToInt(Integer::parseInt).toArray();
-
+        leftCoords = Stream.of(GameCfg.getProps().getProperty("map.leftPoly").split(",")).mapToInt(Integer::parseInt).toArray();
+        rightCoords = Stream.of(GameCfg.getProps().getProperty("map.rightPoly").split(",")).mapToInt(Integer::parseInt).toArray();
         //dodajemy w odwrotnej kolejnosci (od tylu) (od poczatku cos nie dizalalo wiec od tylu), przeskakujemy co 2 wpisy, zakladamy ze leftCoords, i right coords maja taka sama dlugosc (warunek petli)
         for (int i = leftCoords.length - 1; i > 0; i -= 2) {
             leftPoly.addPoint(leftCoords[i - 1], leftCoords[i]);
             rightPoly.addPoint(rightCoords[i - 1], rightCoords[i]);
         }
-
-        for (int i = 0; i < obstacleCoords.length / 2; ++i) {
-            Kamien kamyk = new Kamien(obstacleCoords[i * 2] - 50, obstacleCoords[i * 2 + 1] + 50);
-            kamyk.setVelY(velY);
-            handler.addObject(kamyk);
-        }
-
         //przesuwamy jednorazowo mape o 50 jednostek w dol, aby na starcie bylo widac kawalek
         leftPoly.translate(0, 30 * velY);
         rightPoly.translate(0, 30 * velY);
     }
-
-
-    //private int random(Random rnd, int min, int max) {
-    //    return rnd.nextInt(max - min + 1) + min;
-    //}
-
-//    private void generateMap() {
-//        Random rnd = new Random(5);
-//        int coordX;
-//        int coordX2;
-//        int i;
-//        leftCoords = new int[34];
-//        rightCoords = new int[34];
-//        leftPoly.addPoint(0, 0);
-//        leftCoords[0] = 0;
-//        leftCoords[1] = 0;
-//        rightPoly.addPoint(600, 0);
-//        rightCoords[0] = 600;
-//        rightCoords[1] = 0;
-//        for (i = 0; i < 15; ++i) {
-//            coordX = random(rnd, 0, 300);
-//            coordX2 = random(rnd, coordX + 100, coordX + 300);
-//
-//            leftPoly.addPoint(coordX, -i * 300);
-//            leftCoords[(i + 1) * 2] = coordX;
-//            leftCoords[(i + 1) * 2 + 1] = -i * 300;
-//
-//            rightPoly.addPoint(coordX2, -i * 300);
-//            rightCoords[(i + 1) * 2] = coordX2;
-//            rightCoords[(i + 1) * 2 + 1] = -i * 300;
-//        }
-//
-//        leftPoly.addPoint(0, (-i + 1) * 300);
-//        rightPoly.addPoint(600, (-i + 1) * 300);
-//        leftCoords[(i + 1) * 2] = 0;
-//        leftCoords[(i + 1) * 2 + 1] = (-i + 1) * 300;
-//        rightCoords[(i + 1) * 2] = 600;
-//        rightCoords[(i + 1) * 2 + 1] = (-i + 1) * 300;
-//        for (int coords : leftCoords) {
-//            System.out.print(coords + ",");
-//        }
-//        System.out.println(" ");
-//        for (int coords : rightCoords) {
-//            System.out.print(coords + ",");
-//        }
-//    }
 
     private int loadDifficulty(GameCfg.DIFFICULTY diff) {
         switch (diff) {

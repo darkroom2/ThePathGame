@@ -7,8 +7,7 @@ public class HUD {
 
 
     private int score = 0;
-    private int lastScore = 0;
-    public int HEALTH;
+    private int HEALTH = 3;
     private int maxHealth;
 
     public HUD(int maxHealth) {
@@ -33,17 +32,5 @@ public class HUD {
 
     public void tick() {
         score++;
-    }
-
-    public void resetHealth() {
-        HEALTH = maxHealth;
-    }
-
-    public void saveScore() {
-        lastScore = score;
-    }
-
-    public void resetScore() {
-        score = lastScore;
     }
 }

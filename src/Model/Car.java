@@ -1,8 +1,7 @@
 package Model;
 
 import Controllers.Game;
-import Controllers.HUD;
-import Controllers.Handler;
+import Controllers.GameCfg;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,71 +13,44 @@ import java.io.IOException;
 public class Car extends GameObject {
 
     public BufferedImage image;
-    private Handler handler;
-    private HUD hud;
     private Map map;
 
-    private boolean colliding = false;
 
-    public Car(int x, int y, Handler handler, HUD hud) {
-        super(ID.Car, x, y);
+    public Car(ID id, int x, int y, GameObject map) {
+        super(id, x, y);
         // get map to check collisions
-        this.handler = handler;
-        this.hud = hud;
+        this.map = (Map) map;
         try {
             image = ImageIO.read(new File("res/samoch.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        map = (Map) handler.getObject(ID.Map);
+        velY = Integer.parseInt(GameCfg.getProps().getProperty("car.speed"));
     }
 
     @Override
     public void tick() {
         if (wallCollision()) {
             System.out.println("kolizja");
+            //TODO:system przyznawania punktow aby moc go wyswietlic po przegraniu i wygraniu
             Game.gameState = Game.STATE.Lose;
         }
 
-        //TODO: zrobic spawn kamieni i po kolizji z nimi odjecie zycia (zrobic booleana ktory po kolizji i odjeciu zycia ustawiamy na true i kiedy jest true to juz nie odejmujemy zycia, pozniej gdy juz nie ma kolizji to go dajemu na false)
+        //TODO:zrobic spawn kamieni i po kolizji z nimi odjecie zycia (zrobic booleana ktory po kolizji i odjeciu zycia ustawiamy na true i kiedy jest true to juz nie odejmujemy zycia, pozniej gdy juz nie ma kolizji to go dajemu na false)
         //TODO: pamietac tez zeby sprawdzac jesli zycie <=0 to przegrana
 
         //jesli samochod wysokosc (y) samochodu nie nalezy(czyli jest wyzej lub nizej) do mapy (leftpoly) to albo nie wjechalismy na mape, albo juz wyjechalismy
         //ale sprawdzamy tez punkt 0,0 ktory na starcie nalezy do mapy a na koncu juz nie, dlatego wygrywamy po wyjezdzie z mapy
-        if (winCondition()) {
+        if (!map.leftPoly.contains(0, y + image.getHeight()) && !map.leftPoly.contains(0, 0)) {
             System.out.println("winner");
+            //TODO: dodac WINNER screenw
             Game.gameState = Game.STATE.Win;
         }
-        if (obstacleCollision()) {
-            if (!colliding) {
-                hud.HEALTH--;
-                if (hud.HEALTH <= 0)
-                    Game.gameState = Game.STATE.Lose;
-            }
-            colliding = true;
-        } else {
-            colliding = false;
-        }
-    }
-
-    private boolean obstacleCollision() {
-        for (GameObject tempObject : handler.objects)
-            if (tempObject.getId() == ID.Kamien && tempObject.getY() > y - 100 && tempObject.getY() < y) {
-                Kamien kamien = (Kamien) tempObject;
-                return kamien.getShape().intersects(getShape().getBounds2D());
-            }
-        return false;
-    }
-
-    private boolean winCondition() {
-        return !map.leftPoly.contains(0, y + image.getHeight()) && !map.leftPoly.contains(0, 0);
     }
 
     @Override
     public void render(Graphics g) {
         g.drawImage(image, x, y, null);
-//        Graphics2D g2d = (Graphics2D) g;
-//        g2d.draw(getShape().getBounds());
     }
 
     private boolean wallCollision() {

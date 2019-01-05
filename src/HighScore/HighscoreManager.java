@@ -8,17 +8,20 @@ public class HighscoreManager {
 
     private static final String HIGHSCORE_FILE = "res/scores.dat";
 
-    private ObjectOutputStream oStream = null;
-    private ObjectInputStream iStream = null;
+    ObjectOutputStream oStream = null;
+    ObjectInputStream iStream = null;
 
     public HighscoreManager() {
         scores = new ArrayList<>();
     }
 
-    private ArrayList<Score> getScores() {
+    public ArrayList<Score> getScores() {
         loadScoreFile();
         scores.sort(Score::compareTo);
         return scores;
+    }
+
+    private void sortScores() {
     }
 
     private void loadScoreFile() {

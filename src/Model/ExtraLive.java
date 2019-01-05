@@ -7,22 +7,24 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
+public class ExtraLive extends GameObject {
 
-public class Kamien extends GameObject {
-
+    Properties props;
     private BufferedImage image;
+    private int velY;
 
-    Kamien(ID id, int x, int y) {
+    ExtraLive(ID id, int x, int y) {
         super(id, x, y);
         velY = -1;
         try {
-            image = ImageIO.read(new File("res/kamien.png"));
+            image = ImageIO.read(new File("res/serce.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        velY = Integer.parseInt(GameCfg.getProps().getProperty("kamien.speed"));
+        velY = Integer.parseInt(GameCfg.getProps().getProperty("life.speed"));
 
     }
 

@@ -1,6 +1,7 @@
 package Controllers;
 
 import Model.Car;
+import Model.ID;
 import Model.Map;
 
 import javax.swing.*;
@@ -21,12 +22,9 @@ public class Menu extends MouseAdapter {
     private Map map;
     private Font font;
 
-    private int level = 1;
-    private int maxlevels = 3;
-
     private GameCfg.DIFFICULTY diff = GameCfg.DIFFICULTY.Easy;
 
-    Menu(Handler handler, HUD hud) {
+    Menu(Game game, Handler handler, HUD hud) {
         this.handler = handler;
         this.hud = hud;
         this.font = GameCfg.getCustomFont();
@@ -45,7 +43,7 @@ public class Menu extends MouseAdapter {
         // Draw the String
         for (String line : text.split("\n")) {
             g.drawString(line, x, y);
-            y += metrics.getHeight();
+            y+=metrics.getHeight();
         }
 
     }
@@ -58,18 +56,13 @@ public class Menu extends MouseAdapter {
             // przycisk gry
             if (mouseOver(mx, my, Game.WIDTH / 2 - 50, Game.HEIGHT / 2 - 56, 100, 34)) {
                 handler.objects.clear();
-                if (level > maxlevels) {
-                    hud.setScore(0);
-                    level = 1;
-                }
-                this.map = new Map(0, 0, handler, diff, "map" + level);
+                this.map = new Map(ID.Map, 0, 0, diff);
                 handler.objects.add(this.map);
                 //samochod musi byc stworzony po mapie, jest zalezny od niej, aby moc sprawdzac kolizje z nia
-                this.car = new Car(Game.WIDTH / 2 - 50, Game.HEIGHT / 2 - 56, handler, hud);
+                this.car = new Car(ID.Car, Game.WIDTH / 2 - 50, Game.HEIGHT / 2 - 56, this.map);
                 handler.objects.add(this.car);
                 //jesli wychodzimy z gry podczas pauzy, to zostaje ona true, zatem zapobiegawczo zawsze po Play ustawiamy na false
-                hud.resetScore();
-                hud.resetHealth();
+                hud.setScore(0);
                 Game.paused = false;
                 Game.gameState = Game.STATE.Game;
             }
@@ -112,23 +105,18 @@ public class Menu extends MouseAdapter {
         if (Game.gameState == Game.STATE.Win) {
             // przycisk return
             if (mouseOver(mx, my, Game.WIDTH / 2 - 50, Game.HEIGHT / 2 + 61, 100, 34)) {
-                if (level == maxlevels) {
-                    String player1Name = JOptionPane.showInputDialog("Podaj imie");
-                    if (player1Name != null)
-                        saveScore(player1Name);
-                }
-                level++;
-                hud.saveScore();
+                String player1Name = JOptionPane.showInputDialog("Podaj imie");
+                saveScore(player1Name);
                 Game.gameState = Game.STATE.Menu;
             }
         }
 
         if (Game.gameState == Game.STATE.Lose) {
+            //TODO:field to write nickname, show string 'gameover', Return button
             // przycisk return
             if (mouseOver(mx, my, Game.WIDTH / 2 - 50, Game.HEIGHT / 2 + 61, 100, 34)) {
                 String player1Name = JOptionPane.showInputDialog("Podaj imie");
-                if (player1Name != null)
-                    saveScore(player1Name);
+                saveScore(player1Name);
                 Game.gameState = Game.STATE.Menu;
             }
         }

@@ -32,11 +32,11 @@ public class Game extends JPanel implements Runnable {
     private Game() {
 
         WIDTH = Integer.parseInt(GameCfg.getProps().getProperty("game.width"));
-        HEIGHT = Integer.parseInt(GameCfg.getProps().getProperty("game.height"));
+        HEIGHT = WIDTH * 4 / 3;
         screenRect = new Rectangle(0, 0, WIDTH, HEIGHT);
         handler = new Handler();
-        hud = new HUD(Integer.parseInt(GameCfg.getProps().getProperty("game.livesCount")));
-        menu = new Menu(handler, hud);
+        hud = new HUD(5);
+        menu = new Menu(this, handler, hud);
         //tworzymy mape
         this.addMouseMotionListener(menu);
         this.addMouseListener(menu);

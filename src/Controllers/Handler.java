@@ -6,8 +6,8 @@ import Model.ID;
 import java.awt.*;
 import java.util.LinkedList;
 
-public class Handler {
-    public LinkedList<GameObject> objects = new LinkedList<>();
+class Handler {
+    LinkedList<GameObject> objects = new LinkedList<GameObject>();
 
     public void addObject(GameObject object) {
         this.objects.add(object);
