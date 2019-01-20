@@ -46,4 +46,8 @@ public class HUD {
     public void resetScore() {
         score = lastScore;
     }
+
+    public void addPoints(int i) {
+        score += i;
+    }
 }

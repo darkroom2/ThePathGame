@@ -1,6 +1,7 @@
 package Model;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Klasa abstrakcyjna, dziedziczą po niej wszystkie gameobjecty
@@ -40,9 +41,7 @@ public abstract class GameObject {
         return velY;
     }
 
-    public void setVelY(int velY) {
-        this.velY = velY;
-    }
+    public abstract void setVelY(int velY);
 
     public int getX() {
         return x;
@@ -60,4 +59,5 @@ public abstract class GameObject {
         this.y = y;
     }
 
+    public abstract Rectangle2D getShape();
 }

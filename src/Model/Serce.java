@@ -7,22 +7,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-
-public class Kamien extends GameObject {
+public class Serce extends GameObject {
 
     private BufferedImage image;
 
-    Kamien(int x, int y) {
-        super(ID.Kamien, x, y);
-        //velY = -1;
+    Serce(int x, int y) {
+        super(ID.Serce, x, y);
         try {
-            image = ImageIO.read(new File("res/kamien.png"));
+            image = ImageIO.read(new File("res/serce.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //velY = Integer.parseInt(GameCfg.getProps().getProperty("kamien.speed"));
-
     }
 
     @Override
@@ -34,9 +29,7 @@ public class Kamien extends GameObject {
     @Override
     public void render(Graphics g) {
         g.drawImage(image, x, y, null);
-//        Graphics2D g2d = (Graphics2D) g;
-//        g2d.setColor(Color.YELLOW);
-//        g2d.draw(getShape());
+
     }
 
     @Override
@@ -44,6 +37,7 @@ public class Kamien extends GameObject {
         this.velY = velY;
 
     }
+
 
     @Override
     public Rectangle2D getShape() {

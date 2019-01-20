@@ -6,23 +6,24 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
-
-public class Kamien extends GameObject {
+public class Bonus extends GameObject {
 
     private BufferedImage image;
+    private Random rnd = new Random();
 
-    Kamien(int x, int y) {
-        super(ID.Kamien, x, y);
-        //velY = -1;
+    Bonus(int x, int y) {
+        super(ID.Bonus, x, y);
         try {
-            image = ImageIO.read(new File("res/kamien.png"));
+            image = ImageIO.read(new File("res/questionMark.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-        //velY = Integer.parseInt(GameCfg.getProps().getProperty("kamien.speed"));
-
+    public int getAction() { // getAction is a randomly 1 or 0
+        return rnd.nextInt(2); // 1 or 0
     }
 
     @Override
@@ -34,15 +35,12 @@ public class Kamien extends GameObject {
     @Override
     public void render(Graphics g) {
         g.drawImage(image, x, y, null);
-//        Graphics2D g2d = (Graphics2D) g;
-//        g2d.setColor(Color.YELLOW);
-//        g2d.draw(getShape());
+
     }
 
     @Override
     public void setVelY(int velY) {
         this.velY = velY;
-
     }
 
     @Override

@@ -9,6 +9,11 @@ import java.util.LinkedList;
 public class Handler {
     public LinkedList<GameObject> objects = new LinkedList<>();
 
+    public void updateVelY(int i) {
+        for (GameObject tempObj : objects)
+            tempObj.setVelY(i);
+    }
+
     public void addObject(GameObject object) {
         this.objects.add(object);
     }

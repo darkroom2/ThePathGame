@@ -4,17 +4,22 @@ import Controllers.GameCfg;
 import Controllers.Handler;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public class Map extends GameObject {
 
+    private Handler handler;
+
     Polygon leftPoly;
     Polygon rightPoly;
-    //private int[] bonusCoords;
 
     public Map(int x, int y, Handler handler, GameCfg.DIFFICULTY diff, String level) {
         super(ID.Map, x, y);
-
+        this.handler = handler;
         leftPoly = new Polygon();
         rightPoly = new Polygon();
 
@@ -24,6 +29,8 @@ public class Map extends GameObject {
         int[] leftCoords = Stream.of(GameCfg.getProps().getProperty(level + ".leftPoly").split(",")).mapToInt(Integer::parseInt).toArray();
         int[] rightCoords = Stream.of(GameCfg.getProps().getProperty(level + ".rightPoly").split(",")).mapToInt(Integer::parseInt).toArray();
         int[] obstacleCoords = Stream.of(GameCfg.getProps().getProperty(level + ".obstacleCoords").split(",")).mapToInt(Integer::parseInt).toArray();
+        int[] lifeCoords = Stream.of(GameCfg.getProps().getProperty(level + ".lifeCoords").split(",")).mapToInt(Integer::parseInt).toArray();
+        int[] bonusCoords = Stream.of(GameCfg.getProps().getProperty(level + ".bonusCoords").split(",")).mapToInt(Integer::parseInt).toArray();
 
         //dodajemy w odwrotnej kolejnosci (od tylu) (od poczatku cos nie dizalalo wiec od tylu), przeskakujemy co 2 wpisy, zakladamy ze leftCoords, i right coords maja taka sama dlugosc (warunek petli)
         for (int i = leftCoords.length - 1; i > 0; i -= 2) {
@@ -36,7 +43,16 @@ public class Map extends GameObject {
             kamyk.setVelY(velY);
             handler.addObject(kamyk);
         }
-
+        for (int i = 0; i < lifeCoords.length / 2; ++i) {
+            Serce serce = new Serce(lifeCoords[i * 2] - 50, lifeCoords[i * 2 + 1] + 50);
+            serce.setVelY(velY);
+            handler.addObject(serce);
+        }
+        for (int i = 0; i < bonusCoords.length / 2; ++i) {
+            Bonus bonus = new Bonus(bonusCoords[i * 2] - 50, bonusCoords[i * 2 + 1] + 50);
+            bonus.setVelY(velY);
+            handler.addObject(bonus);
+        }
         //przesuwamy jednorazowo mape o 50 jednostek w dol, aby na starcie bylo widac kawalek
         leftPoly.translate(0, 30 * velY);
         rightPoly.translate(0, 30 * velY);
@@ -114,5 +130,29 @@ public class Map extends GameObject {
         g.setColor(Color.RED);
         g.fillPolygon(leftPoly);
         g.fillPolygon(rightPoly);
+    }
+
+    @Override
+    public void setVelY(int velY) {
+        this.velY = velY;
+    }
+
+    @Override
+    public Rectangle2D getShape() {
+        return null;
+    }
+
+    public void makeMapFaster(int vel, int duration) {
+        int restoreVelY = this.velY;
+        handler.updateVelY(vel);
+        final ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                handler.updateVelY(restoreVelY);
+            }
+        };
+        ses.schedule(task, duration, TimeUnit.SECONDS);
+        ses.shutdown();
     }
 }
