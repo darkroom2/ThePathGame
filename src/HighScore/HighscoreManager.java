@@ -74,6 +74,8 @@ public class HighscoreManager {
 
     public String getHighscoreString() {
         StringBuilder highscoreString = new StringBuilder();
+
+        // wyswietl ostatnie 3 wyniki
         int max = 3;
 
         ArrayList<Score> scores;

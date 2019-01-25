@@ -22,7 +22,7 @@ public class Game extends JPanel implements Runnable {
     }
 
     public static STATE gameState = STATE.Menu;
-    private Rectangle screenRect;
+    public static Rectangle screenRect;
     private Controllers.Menu menu;
     private Handler handler;
     private HUD hud;

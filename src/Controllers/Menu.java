@@ -68,8 +68,8 @@ public class Menu extends MouseAdapter {
                 this.car = new Car(Game.WIDTH / 2 - 50, Game.HEIGHT / 2 - 56, handler, hud);
                 handler.objects.add(this.car);
                 //jesli wychodzimy z gry podczas pauzy, to zostaje ona true, zatem zapobiegawczo zawsze po Play ustawiamy na false
-                hud.resetScore();
-                hud.resetHealth();
+                hud.restoreScore();
+                hud.restoreHealth();
                 Game.paused = false;
                 Game.gameState = Game.STATE.Game;
             }
@@ -129,6 +129,8 @@ public class Menu extends MouseAdapter {
                 String player1Name = JOptionPane.showInputDialog("Podaj imie");
                 if (player1Name != null)
                     saveScore(player1Name);
+                level = 1;
+                hud.setScore(0);
                 Game.gameState = Game.STATE.Menu;
             }
         }

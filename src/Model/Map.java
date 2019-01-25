@@ -143,13 +143,12 @@ public class Map extends GameObject {
     }
 
     public void makeMapFaster(int vel, int duration) {
-        int restoreVelY = this.velY;
         handler.updateVelY(vel);
         final ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
         Runnable task = new Runnable() {
             @Override
             public void run() {
-                handler.updateVelY(restoreVelY);
+                handler.updateVelY(-vel);
             }
         };
         ses.schedule(task, duration, TimeUnit.SECONDS);

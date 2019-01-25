@@ -23,7 +23,8 @@ public class Bonus extends GameObject {
     }
 
     public int getAction() { // getAction is a randomly 1 or 0
-        return rnd.nextInt(2); // 1 or 0
+        //return rnd.nextInt(2); // 1 or 0
+        return 0;
     }
 
     @Override

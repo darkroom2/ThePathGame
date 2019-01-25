@@ -7,19 +7,25 @@ import java.awt.*;
 import java.util.LinkedList;
 
 public class Handler {
-    public LinkedList<GameObject> objects = new LinkedList<>();
+    public final LinkedList<GameObject> objects = new LinkedList<>();
 
     public void updateVelY(int i) {
-        for (GameObject tempObj : objects)
-            tempObj.setVelY(i);
+        synchronized (objects) {
+            for (GameObject tempObj : objects)
+                tempObj.setVelY(tempObj.getVelY() + i);
+        }
     }
 
     public void addObject(GameObject object) {
-        this.objects.add(object);
+        synchronized (objects) {
+            objects.add(object);
+        }
     }
 
     public void removeObject(GameObject object) {
-        this.objects.remove(object);
+        synchronized (objects) {
+            objects.remove(object);
+        }
     }
 
     public GameObject getObject(ID id) {
@@ -40,8 +46,11 @@ public class Handler {
      * metoda dla wszystkich obiektów w liście, każdy obiekt ma własną metodę render
      */
     public void render(Graphics g) {
-        for (GameObject tempObject : objects) {
-            tempObject.render(g);
+        synchronized (objects) {
+
+            for (GameObject tempObject : objects) {
+                tempObject.render(g);
+            }
         }
 
     }

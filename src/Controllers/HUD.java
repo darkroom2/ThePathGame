@@ -22,6 +22,7 @@ public class HUD {
 
     public void setScore(int score) {
         this.score = score;
+        this.lastScore = score;
     }
 
     public void render(Graphics g) {
@@ -29,13 +30,15 @@ public class HUD {
         g.fillRect(10, 10, 200, 20);
         g.setColor(Color.GREEN);
         g.fillRect(10, 10, 200 / maxHealth * HEALTH, 20);
+
+        Menu.drawCenteredString(g, "" + score, Game.screenRect, g.getFont());
     }
 
     public void tick() {
         score++;
     }
 
-    public void resetHealth() {
+    public void restoreHealth() {
         HEALTH = maxHealth;
     }
 
@@ -43,7 +46,7 @@ public class HUD {
         lastScore = score;
     }
 
-    public void resetScore() {
+    public void restoreScore() {
         score = lastScore;
     }
 

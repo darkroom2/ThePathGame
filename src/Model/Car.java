@@ -55,18 +55,18 @@ public class Car extends GameObject {
             if (!colliding) {
                 if (kolizja.getValue().getId() == ID.Kamien) {
                     hud.HEALTH--;
-                    hud.addPoints(-50); // za strate zycia obcinamy 5k pkt
+                    hud.addPoints(-50); // za strate zycia obcinamy punkty
                     if (hud.HEALTH <= 0)
                         Game.gameState = Game.STATE.Lose;
                 } else if (kolizja.getValue().getId() == ID.Serce) { // tu serce
                     hud.HEALTH++;
-                } else { // tu bonus
+                } else if (kolizja.getValue().getId() == ID.Bonus) { // tu bonus
                     Bonus bonus = (Bonus) kolizja.getValue(); // castujemy GameObject na Bonus bo bonus ma wlasna metode ktorej nie mozemu uzyc za pomoca bazowej klasy GameObject
                     int akcja = bonus.getAction();
                     System.out.println(akcja);
                     if (akcja == 0) {
                         //System.out.println(0);
-                        map.makeMapFaster(map.getVelY() + 3, 3);
+                        map.makeMapFaster(3, 3);
                     } else {
                         //System.out.println(1);
                         hud.addPoints(50);
@@ -75,6 +75,7 @@ public class Car extends GameObject {
                 }
             }
             colliding = true;
+            handler.removeObject(kolizja.getValue());
         } else {
             colliding = false;
         }
