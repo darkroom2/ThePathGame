@@ -70,7 +70,7 @@ public class Car extends GameObject {
                     } else {
                         //System.out.println(1);
                         hud.addPoints(50);
-                        // TODO: LAST FUCKING ThiNG TO FIX IS SCORE SYSTEM AND WE ARE DONE
+                        // TODO: LAST ThiNG TO FIX IS SCORE SYSTEM AND WE ARE DONE SIEMA GITHUB
                     }
                 }
             }
