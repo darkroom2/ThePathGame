@@ -1,5 +1,6 @@
 package Model;
 
+import Controllers.Game;
 import Controllers.GameCfg;
 import Controllers.Handler;
 
@@ -32,6 +33,14 @@ public class Map extends GameObject {
         int[] lifeCoords = Stream.of(GameCfg.getProps().getProperty(level + ".lifeCoords").split(",")).mapToInt(Integer::parseInt).toArray();
         int[] bonusCoords = Stream.of(GameCfg.getProps().getProperty(level + ".bonusCoords").split(",")).mapToInt(Integer::parseInt).toArray();
 
+        //przekonwertowanie koordow do szerokosci ekranu
+        for (int i = 0; i < leftCoords.length; ++i) {
+            leftCoords[i] = map(leftCoords[i], 0, 600, 0, Game.WIDTH);
+        }
+        for (int i = 0; i < leftCoords.length; ++i) {
+            rightCoords[i] = map(rightCoords[i], 0, 600, 0, Game.WIDTH);
+        }
+
         //dodajemy w odwrotnej kolejnosci (od tylu) (od poczatku cos nie dizalalo wiec od tylu), przeskakujemy co 2 wpisy, zakladamy ze leftCoords, i right coords maja taka sama dlugosc (warunek petli)
         for (int i = leftCoords.length - 1; i > 0; i -= 2) {
             leftPoly.addPoint(leftCoords[i - 1], leftCoords[i]);
@@ -58,7 +67,9 @@ public class Map extends GameObject {
         rightPoly.translate(0, 30 * velY);
     }
 
-
+    int map(long x, long in_min, long in_max, long out_min, long out_max) {
+        return (int) ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
+    }
     //private int random(Random rnd, int min, int max) {
     //    return rnd.nextInt(max - min + 1) + min;
     //}

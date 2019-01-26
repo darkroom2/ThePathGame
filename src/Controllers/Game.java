@@ -13,8 +13,10 @@ public class Game extends JPanel implements Runnable {
     //ogolnie static uzywamy gdy tworzymy wiele instancji (obiektow) danej klasy i nie chcemy zeby kazdy z tych obiektow tworzyl oddzielnie na nowo te zmienne
     //static zaś powoduje jednorazowe stworzenie zmiennej i współdzielenie jej miedzy kilkoma obiektami danej klasy
     //dlatego uzywanie static jako ulatwienie dostepu bez deklaracji klasy (ogolnego) nie jest najlepszym rozwiazaniem
-    static int WIDTH;
-    static int HEIGHT;
+    public static int WIDTH;
+    public static int HEIGHT;
+    public static int scaleX;
+    public static int scaleY;
 
     //bez specyfikatora oznacza ze jest package-private.
     public enum STATE {
@@ -33,6 +35,8 @@ public class Game extends JPanel implements Runnable {
 
         WIDTH = Integer.parseInt(GameCfg.getProps().getProperty("game.width"));
         HEIGHT = Integer.parseInt(GameCfg.getProps().getProperty("game.height"));
+        scaleX = WIDTH / 600;
+        scaleY = HEIGHT / 800;
         screenRect = new Rectangle(0, 0, WIDTH, HEIGHT);
         handler = new Handler();
         hud = new HUD(Integer.parseInt(GameCfg.getProps().getProperty("game.livesCount")));
@@ -47,6 +51,7 @@ public class Game extends JPanel implements Runnable {
                 if (gameState == STATE.Game) {
                     if (key == KeyEvent.VK_P) {
                         paused = (!paused);
+
                     }
                     if (key == KeyEvent.VK_ESCAPE) {
                         handler.objects.clear();
